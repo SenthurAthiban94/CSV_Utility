@@ -30,7 +30,7 @@ export default function Home() {
       <footer className={styles.footer}>
           Built by{' '}
           <span className={styles.logo}>
-            <a href="https://www.linkedin.com/in/senthur-athiban-181a85b2/" target="_blank" alt="Author" title="Author">Senthur Athiban</a>
+            <a href="https://www.linkedin.com/in/senthur-athiban-181a85b2/" target="_blank" alt="Author" title="Author" rel="noreferrer">Senthur Athiban</a>
           </span>
       </footer>
     </div>
