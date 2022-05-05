@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { saveAs } from "file-saver";
 import styles from '../../styles/codeEditor.module.css';
 
-export default ({files=[]})=>{
+const CODE_EDITOR = ({files=[]})=>{
     let initialCode = 'After Processing Please Return the result to check in output';
     let [code,setCode] = useState(`/*\n ${initialCode} \n*/`);
     const [CSV_UTIL_OUTPUT,setOutput] = useState('>');
@@ -72,3 +72,5 @@ export default ({files=[]})=>{
             </div>
         </React.Fragment>
 }
+
+export default CODE_EDITOR;

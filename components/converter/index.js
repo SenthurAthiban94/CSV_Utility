@@ -64,7 +64,7 @@ const FileViewer = ({file, updateFiles})=>{
     </div>
 }
 
-export default ({files,setFiles})=>{
+const CONVERTER = ({files,setFiles})=>{
     return <div className={styles.wrapper}>
         {
             files.map(file=>{
@@ -74,3 +74,5 @@ export default ({files,setFiles})=>{
         <Uploader updateFiles={(file,location, data)=>setFiles([...files,{id:files.length+1,file,location, data}])}/>
     </div>
 }
+
+export default CONVERTER;
