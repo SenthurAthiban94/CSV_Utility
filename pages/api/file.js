@@ -39,7 +39,6 @@ export default async function handler(req, res) {
       const form = new formidable.IncomingForm();
       form.parse(req, async function (err, fields, files) {
         const destinationPath = `./public/uploads/${files.file.originalFilename}`;
-        console.log("FILE PATH",files.file.filepath);
         await fs.writeFileSync(destinationPath, fs.readFileSync(files.file.filepath));
         await fs.unlinkSync(files.file.filepath);
         const CSVJSON_Response = await CSVTOJSON(destinationPath);

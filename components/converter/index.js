@@ -15,7 +15,6 @@ const Uploader = ({updateFiles})=>{
               method: "POST",
               body
             }).then(res=>res.json());
-            console.log('RESPONSE',response);
             if(response.status){
                 updateFiles(e.target.files[0],response.jsonFile, response.jsonData);
             }

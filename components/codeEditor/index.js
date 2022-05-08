@@ -24,27 +24,35 @@ const CODE_EDITOR = ({files=[]})=>{
 
 
     const download = async ()=>{
-        // if(!downloading){
+        if(!downloading){
             setDownloading(true);
             const response = await fetch("/api/csv", {
                 method: "POST",
                 body: JSON.stringify({files, code}),
-            }).then(res=>res.json()).catch(e=>console.log('Error While Downloading', e));
-            console.log('DATA',response);
-            saveAs(response.result,'OUTPUT.csv');
+            }).then(res=>res.json())
+            .catch(e=>{
+                console.log('Error While Downloading', e);
+                setOutput(`> Error While Downloading -> ${e.message || e}`);
+            });
+            if(response){
+                if(response.status){
+                    saveAs(response.result,'OUTPUT.csv');
+                }else {
+                    setOutput(`> Error -> ${JSON.stringify(response.err)}`);
+                }
+            }
             setDownloading(false);
-        // } 
+        } 
     }
     const execute = ()=>{
         try{
             let Executor= new Function(code);
             let result = Executor();
             if(typeof result === 'object') result = JSON.stringify(result,null,2);
-            setOutput(`> ${result}`);
+            setOutput(`> ${result ? result : 'Error -> "Something should be returned from the code!!"'}`);
         }catch(e){
-            console.log(e);
-            setResult(false);
-            setOutput(`> Error -> ${e}`);
+            console.log('Error while Code Execution!',e);
+            setOutput(`> Error -> "${e.message || e}"`);
         }
     };
     return <React.Fragment>
