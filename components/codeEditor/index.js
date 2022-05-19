@@ -44,10 +44,11 @@ const CODE_EDITOR = ({files=[]})=>{
             setDownloading(false);
         } 
     }
-    const execute = ()=>{
+    const execute = async ()=>{
         try{
-            let Executor= new Function(code);
-            let result = Executor();
+            const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+            let Executor=  new AsyncFunction(code);
+            let result = await Executor();
             if(typeof result === 'object') result = JSON.stringify(result,null,'\t');
             setOutput(`> ${result ? result : 'Error -> "Something should be returned from the code!!"'}`);
         }catch(e){
