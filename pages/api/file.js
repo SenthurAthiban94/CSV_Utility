@@ -1,7 +1,7 @@
 import formidable from "formidable";
 import fs from "fs";
 const csv = require('csvtojson')
-
+const excelToJson = require('convert-excel-to-json');
 
 export const config = {
   api: {
@@ -26,11 +26,25 @@ const webhookPayloadParser = (req) => new Promise((resolve) => {
     });
 });
 
-export const CSVTOJSON = async (filePath)=>{
-  const JSONDATA = await csv().fromFile(filePath);
-  const destinationPath = filePath.replace('.csv','.json');
+export const CONVERTJSON = async (filePath)=>{
+  let JSONDATA, destinationPath, filteredResults;
+  let isCSVFile = filePath.includes('.csv');
+  if(isCSVFile){
+    JSONDATA = await csv().fromFile(filePath);
+    destinationPath = filePath.replace('.csv','.json');
+    filteredResults = JSONDATA.slice(0, 5);
+  }else {
+    JSONDATA = await excelToJson({sourceFile: filePath});
+    let data = (JSONDATA && Object.keys(JSONDATA)) || [];
+    if(data.length){
+      let filteredSheets = {};
+      data.map(k=>filteredSheets[k] = JSONDATA[k].slice(0, 5));
+      destinationPath = filePath.replace((filePath.includes('.xlsx') ? '.xlsx' : '.xls'),'.json');
+      filteredResults = filteredSheets;
+    }
+  }
   fs.writeFileSync(destinationPath,JSON.stringify(JSONDATA));
-  return {location:destinationPath, data: JSONDATA.slice(0, 5)};
+  return {location:destinationPath, data: filteredResults};
 }
 
 export default async function handler(req, res) {
@@ -41,7 +55,7 @@ export default async function handler(req, res) {
         const destinationPath = `./public/uploads/${files.file.originalFilename}`;
         await fs.writeFileSync(destinationPath, fs.readFileSync(files.file.filepath));
         await fs.unlinkSync(files.file.filepath);
-        const CSVJSON_Response = await CSVTOJSON(destinationPath);
+        const CSVJSON_Response = await CONVERTJSON(destinationPath);
         await fs.unlinkSync(destinationPath);
         TTL(CSVJSON_Response.location);
         return res.status(201).json({status:true,msg:'Successfully uploaded!',jsonData:CSVJSON_Response.data,jsonFile:CSVJSON_Response.location.replace('./public','')});

@@ -25,8 +25,9 @@ export default async function handler(req, res) {
                     });
                 });
             }));
-            let Executor= new Function(`${varDeclarations}${code}`);
-            let JS_OUTPUT = Executor();
+            const AsyncFunction = Object.getPrototypeOf(async function(){}).constructor;
+            let Executor=  new AsyncFunction(`${varDeclarations}${code}`);
+            let JS_OUTPUT = await Executor();
             if(JS_OUTPUT){
                 const json2csvParser = new Parser();
                 const csv = json2csvParser.parse(JS_OUTPUT);

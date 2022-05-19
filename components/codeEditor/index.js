@@ -7,7 +7,7 @@ import { saveAs } from "file-saver";
 import styles from '../../styles/codeEditor.module.css';
 
 const CODE_EDITOR = ({files=[]})=>{
-    let initialCode = 'After Processing Please Return the result to check in output';
+    let initialCode = 'After Processing Please Return the result to check in output \n If you have uploaded Excel sheets then <--File*[SHEET_NAME]--> can be used to access its data.';
     let [code,setCode] = useState(`/*\n ${initialCode} \n*/`);
     const [CSV_UTIL_OUTPUT,setOutput] = useState('>');
     const [downloading,setDownloading] = useState(false);
@@ -48,7 +48,7 @@ const CODE_EDITOR = ({files=[]})=>{
         try{
             let Executor= new Function(code);
             let result = Executor();
-            if(typeof result === 'object') result = JSON.stringify(result,null,2);
+            if(typeof result === 'object') result = JSON.stringify(result,null,'\t');
             setOutput(`> ${result ? result : 'Error -> "Something should be returned from the code!!"'}`);
         }catch(e){
             console.log('Error while Code Execution!',e);
@@ -67,8 +67,10 @@ const CODE_EDITOR = ({files=[]})=>{
                         fontSize: 12,
                         border:'1px solid black',
                         margin:'16px',
+                        outline: 'none',
+                        minHeight: '500px',
                         marginTop:'36px',
-                        height: '500px',
+                        height: 'auto',
                         overflowY: 'scroll'
                     }}
                 />

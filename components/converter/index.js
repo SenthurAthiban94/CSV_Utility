@@ -29,7 +29,7 @@ const Uploader = ({updateFiles})=>{
             </div>: (
                <span>
                    +
-                   <input ref={fileInput} type="file" className={styles.fileInput} accept=".csv" onChange={onFileChange}/>
+                   <input ref={fileInput} type="file" className={styles.fileInput} accept=".csv,.xlsx,.xls" onChange={onFileChange}/>
                 </span>
             )}
             </div>
